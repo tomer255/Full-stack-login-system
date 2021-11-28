@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -12,37 +12,84 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Axios from 'axios';
+import PopUp from './PopUp'
+import Alert from '@mui/material/Alert';
 
-function Copyright(props) {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'Copyright © '}
-        <Link color="inherit" href="https://mui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
 
-  const theme = createTheme();
 
+const theme = createTheme();
+let bool = true;
+console.log(bool);
 
 export default function Register() {
+  const [popUpInfo,setPopUpInfo] = useState({});
+  const [passwordConfig,setPasswordConfig] = useState([]);
+
+  useEffect(() => {
+    bool = getPasswordConfig();
+  },[])
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        console.log({
-          email: data.get('email'),
-          password: data.get('password'),
+        Axios.post("http://localhost:3005/register",{
+          email : data.get('email'),
+          password : data.get('password'),
+          firstName : data.get('firstName'),
+          lastName : data.get('lastName')
+        }).then((response) => {
+          setPopUpInfo({
+            title: "server massage",
+            text: <Alert severity="success">{response.data}</Alert>,
+            show: true
+          });
+        })
+        .catch((error) => {
+          setPopUpInfo({
+            title: "server massage", 
+            text:<Alert severity="error">{error.response.data}</Alert>,
+            show: true
+          });
         });
       };
+
+      const getPasswordConfig = () =>{
+      Axios.get('http://localhost:3005/password_config')
+      .then( (response) => {
+        // console.log(response.data);
+        setPasswordConfig([response.data]);
+        // console.log(passwordConfig);
+        return true;
+      })
+      .catch((error) => {
+        // handle error
+        console.log(error);
+        return false;
+      })
+      }
+      
+      
+      // Axios.get('http://localhost:3005/password_config')
+      // .then( (response) => {
+      //   // console.log(response.data);
+      //   // setPasswordConfig(response.data);
+      //   // console.log(passwordConfig);
+      // })
+      // .catch((error) => {
+      //   // handle error
+      //   console.log(error);
+      // })
+
+    // console.log("test");
+
     
       return (
         <ThemeProvider theme={theme}>
+          <PopUp info={popUpInfo} handleClose={()=>{setPopUpInfo(false)}}>
+            </PopUp>
           <Container component="main" maxWidth="xs">
+            
             <CssBaseline />
             <Box
               sx={{
@@ -58,6 +105,8 @@ export default function Register() {
               <Typography component="h1" variant="h5">
                 Sign up
               </Typography>
+            <h1>{bool === true ? "yes" : "no"}</h1>
+            
               <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
@@ -99,16 +148,25 @@ export default function Register() {
                       label="Password"
                       type="password"
                       id="password"
-                      autoComplete="new-password"
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <FormControlLabel
-                      control={<Checkbox value="allowExtraEmails" color="primary" />}
-                      label="I want to receive inspiration, marketing promotions and updates via email."
-                    />
-                  </Grid>
+                  {/* <Grid item xs={12}>
+                    <TextField
+                    required
+                    fullWidth
+                    name="validatePassword"
+                    label="Validate Password"
+                    type="validatePassword"
+                    id="validatePassword"
+                  />
+                  </Grid> */}
                 </Grid>
+                {
+                  // console.log(passwordConfig)
+                  // Object.keys(passwordConfig[0].settings).map((key, index) => {
+                  //   console.log(key,":",index);
+                  // })
+                }
                 <Button
                   type="submit"
                   fullWidth
@@ -119,14 +177,13 @@ export default function Register() {
                 </Button>
                 <Grid container justifyContent="flex-end">
                   <Grid item>
-                    <Link href="#" variant="body2">
+                    <Link href="/Login" variant="body2">
                       Already have an account? Sign in
                     </Link>
                   </Grid>
                 </Grid>
               </Box>
             </Box>
-            <Copyright sx={{ mt: 5 }} />
           </Container>
         </ThemeProvider>
       );

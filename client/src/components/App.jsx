@@ -8,6 +8,8 @@ import Dashboard from "./Dashboard";
 import Forgotpass from "./Forgotpass";
 
 
+
+
 export default function App() {
   return (
     <div>
@@ -19,6 +21,7 @@ export default function App() {
           <Route exact path="/login" component={Login} />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/forgotpass" component={Forgotpass} />
+
         </Switch>
       </BrowserRouter>
     </div>

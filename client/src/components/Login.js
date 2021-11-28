@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,35 +12,41 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-function Copyright(props) {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'Copyright © '}
-        <Link color="inherit" href="https://mui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
+import Axios from 'axios';
+import PopUp from './PopUp'
+import Alert from '@mui/material/Alert';
   
   const theme = createTheme();
 
 export default function Login() {
-    const handleSubmit = (event) => {
+  const [popUpInfo,setPopUpInfo] = useState({});
+
+      const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        console.log({
+        Axios.post("http://localhost:3005/login",{
           email: data.get('email'),
           password: data.get('password'),
+        }).then((response) => {
+          setPopUpInfo({
+            title: "server massage",
+            text: <Alert severity="success">{response.data}</Alert>,
+            show: true
+          });
+        })
+        .catch((error) => {
+          setPopUpInfo({
+            title: "server massage",
+            text:<Alert severity="error">{error.response.data}</Alert>,
+            show: true
+          });
         });
       };
     
       return (
         <ThemeProvider theme={theme}>
+          <PopUp info={popUpInfo} handleClose={()=>{setPopUpInfo(false)}}>
+            </PopUp>
           <Container component="main" maxWidth="xs">
             <CssBaseline />
             <Box
@@ -92,19 +98,18 @@ export default function Login() {
                 </Button>
                 <Grid container>
                   <Grid item xs>
-                    <Link href="#" variant="body2">
+                    <Link href="/forgotpass" variant="body2">
                       Forgot password?
                     </Link>
                   </Grid>
                   <Grid item>
-                    <Link href="#" variant="body2">
-                      {"Don't have an account? Sign Up"}
+                    <Link href="/Register" variant="body2">
+                      Don't have an account? Sign Up
                     </Link>
                   </Grid>
                 </Grid>
               </Box>
             </Box>
-            <Copyright sx={{ mt: 8, mb: 4 }} />
           </Container>
         </ThemeProvider>
       );
