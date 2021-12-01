@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,21 +13,22 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Axios from 'axios';
-import PopUp from './PopUp'
+import PopUp from './PopUp';
 import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 
 const theme = createTheme();
-let bool = true;
-console.log(bool);
+
 
 export default function Register() {
   const [popUpInfo,setPopUpInfo] = useState({});
   const [passwordConfig,setPasswordConfig] = useState([]);
+  const [userPassword,setUserPassword] = useState("");
 
   useEffect(() => {
-    bool = getPasswordConfig();
+    getPasswordConfig();
   },[])
 
     const handleSubmit = (event) => {
@@ -54,34 +55,17 @@ export default function Register() {
         });
       };
 
-      const getPasswordConfig = () =>{
+      const getPasswordConfig = () => {
       Axios.get('http://localhost:3005/password_config')
       .then( (response) => {
-        // console.log(response.data);
         setPasswordConfig([response.data]);
-        // console.log(passwordConfig);
-        return true;
       })
       .catch((error) => {
         // handle error
         console.log(error);
-        return false;
       })
       }
       
-      
-      // Axios.get('http://localhost:3005/password_config')
-      // .then( (response) => {
-      //   // console.log(response.data);
-      //   // setPasswordConfig(response.data);
-      //   // console.log(passwordConfig);
-      // })
-      // .catch((error) => {
-      //   // handle error
-      //   console.log(error);
-      // })
-
-    // console.log("test");
 
     
       return (
@@ -105,7 +89,6 @@ export default function Register() {
               <Typography component="h1" variant="h5">
                 Sign up
               </Typography>
-            <h1>{bool === true ? "yes" : "no"}</h1>
             
               <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
@@ -148,6 +131,7 @@ export default function Register() {
                       label="Password"
                       type="password"
                       id="password"
+                      onChange={(event) => {setUserPassword(event.target.value)}}
                     />
                   </Grid>
                   {/* <Grid item xs={12}>
@@ -162,10 +146,18 @@ export default function Register() {
                   </Grid> */}
                 </Grid>
                 {
-                  // console.log(passwordConfig)
-                  // Object.keys(passwordConfig[0].settings).map((key, index) => {
-                  //   console.log(key,":",index);
-                  // })
+                  passwordConfig.length === 0 ? (
+                    <Box sx={{ display: 'flex' }}>
+                      <CircularProgress />
+                    </Box>
+                  ) : (
+                    Object.keys(passwordConfig[0].settings).map((key) => {
+                      if(passwordConfig[0].settings[key]){
+                        let re = new RegExp(passwordConfig[0].regex[key])
+                        return(<Alert severity={re.test(userPassword)?"success":"error"}>{key}</Alert>);
+                      }
+                    })
+                    )
                 }
                 <Button
                   type="submit"

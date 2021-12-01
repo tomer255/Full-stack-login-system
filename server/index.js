@@ -4,8 +4,13 @@ const mysql = require('mysql');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv')
+const verifyToken = require("./auth");
+const jwt = require("jsonwebtoken");
+const config = process.env;
 
 dotenv.config();
+
+const Port = process.env.PORT
 
 const Login = require("./routes/login");
 const Register = require("./routes/register");
@@ -31,8 +36,8 @@ db = mysql.createConnection({
     database: "security-project"
 })
 
-app.listen(3005, function() {
-    console.log("Server is running on port 3005");
+app.listen(Port, function() {
+    console.log(`Server is running on port ${Port}`);
 });
 
 app.get("/", (req,res) => {
@@ -41,7 +46,10 @@ app.get("/", (req,res) => {
 
 app.get("/password_config",(req,res) => {
     res.send(require('./password_config'));
-    console.log("test");
+})
+
+app.get("/authentication_status",verifyToken,(req,res) => {
+    res.status(200).send();
 })
 
 app.post("/login", Login);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Axios from 'axios';
 import PopUp from './PopUp'
 import Card from '@mui/material/Card';
@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import Alert from '@mui/material/Alert';
+import { useHistory } from "react-router";
 
 
 export default function Dashboard() {
@@ -13,17 +14,36 @@ export default function Dashboard() {
     const [content,setContent] = useState("");
     const [search,setSearch] = useState("");
     const [noteList,setNoteList] = useState([]);
-
     const [popUpInfo,setPopUpInfo] = useState({});
+    const history = useHistory();
+    const headers = {
+      "x-access-token": localStorage.getItem('token'),
+  }
 
-    const handleAddNote = (event) => {
-        event.preventDefault();
+    useEffect(() => {
+      if(headers["x-access-token"]){
+        Axios.get("http://localhost:3005/authentication_status",
+        {headers: headers}
+        ).then((response) => {
+          
+        }).catch((error) => {
+          history.push("/Login");
+
+        });
+      }
+      else{
+        history.push("/Login");
+      }
+      handleSearch();
+    },[])
+
+    const handleAddNote = () => {
         Axios.post("http://localhost:3005/addNote",{
-          email : "admin",
           title : title,
           content : content
-        }).then((response) => {
-          handleSearch(event);
+        },{headers: headers}
+        ).then((response) => {
+          handleSearch();
           setPopUpInfo({
             title: "server massage", 
             text: <Alert severity="success">{response.data}</Alert>,
@@ -38,12 +58,11 @@ export default function Dashboard() {
         });
       };
 
-      const handleSearch = (event) => {
-        event.preventDefault();
+      const handleSearch = () => {
         Axios.post("http://localhost:3005/Search",{
-            email: "admin",
             search : search
-        }).then((response) => {
+        },{headers: headers}
+        ).then((response) => {
           setNoteList(response.data);
         }).catch((error) => {
           setPopUpInfo({
@@ -54,13 +73,12 @@ export default function Dashboard() {
         });
       };
 
-      const handleRemoveNote = (event, item) => {
-        event.preventDefault();
+      const handleRemoveNote = (item) => {
         Axios.post("http://localhost:3005/removeNote",{
-            email: "admin",
             title : item.title
-        }).then((response) => {
-          handleSearch(event);
+        },{headers: headers}
+        ).then((response) => {
+          handleSearch();
         }).catch((error) => {
           setPopUpInfo({
             title: "server massage",
@@ -99,21 +117,6 @@ export default function Dashboard() {
                 </input>
                 <button onClick={handleSearch}>search</button>
                 <br></br>
-                {/* <table>
-                <tr>
-                    <th>Title</th>
-                    <th>content</th>
-                </tr>
-                {noteList.map((item)=>{
-                  return(
-                    <tr>
-                    <td>{item.title}</td>
-                    <td>{item.content}</td>
-                    <td><button onClick={(event)=>{handleRemoveNote(event, item)}}>Delete</button></td>
-                    </tr>
-                  );
-                })}
-                </table> */}
                  {noteList.map((item)=>{
                   return(
                     <Card sx={{ maxWidth: 345 }}>
@@ -125,7 +128,7 @@ export default function Dashboard() {
                         <Typography variant="body2" color="text.secondary">
                         {item.content}
                         </Typography>
-                        <td><button onClick={(event)=>{handleRemoveNote(event, item)}}>Delete</button></td>
+                        <td><button onClick={()=>{handleRemoveNote(item)}}>Delete</button></td>
                       </CardContent>
                     </CardActionArea>
                   </Card>

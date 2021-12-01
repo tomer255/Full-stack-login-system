@@ -15,11 +15,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Axios from 'axios';
 import PopUp from './PopUp'
 import Alert from '@mui/material/Alert';
+import { useHistory } from "react-router";
   
   const theme = createTheme();
 
 export default function Login() {
   const [popUpInfo,setPopUpInfo] = useState({});
+  const history = useHistory();
 
       const handleSubmit = (event) => {
         event.preventDefault();
@@ -28,11 +30,9 @@ export default function Login() {
           email: data.get('email'),
           password: data.get('password'),
         }).then((response) => {
-          setPopUpInfo({
-            title: "server massage",
-            text: <Alert severity="success">{response.data}</Alert>,
-            show: true
-          });
+          localStorage.setItem("token",response.data.token);
+          history.push("/dashboard");
+          window.location.reload();
         })
         .catch((error) => {
           setPopUpInfo({
