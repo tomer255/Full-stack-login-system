@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -13,9 +11,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Axios from 'axios';
-import PopUp from './PopUp';
 import Alert from '@mui/material/Alert';
-import CircularProgress from '@mui/material/CircularProgress';
+import { useSnackbar } from 'notistack';
+import { useHistory } from "react-router";
 
 
 
@@ -23,13 +21,14 @@ const theme = createTheme();
 
 
 export default function Register() {
-  const [popUpInfo,setPopUpInfo] = useState({});
   const [passwordConfig,setPasswordConfig] = useState([]);
   const [userPassword,setUserPassword] = useState("");
+  const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     getPasswordConfig();
-  },[])
+  })
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -40,18 +39,12 @@ export default function Register() {
           firstName : data.get('firstName'),
           lastName : data.get('lastName')
         }).then((response) => {
-          setPopUpInfo({
-            title: "server massage",
-            text: <Alert severity="success">{response.data}</Alert>,
-            show: true
-          });
+          enqueueSnackbar(response.data,{ variant : 'success'});
+          history.push("/Login");
         })
         .catch((error) => {
-          setPopUpInfo({
-            title: "server massage", 
-            text:<Alert severity="error">{error.response.data}</Alert>,
-            show: true
-          });
+          const massage = error.response ? error.response.data : "Network Error";
+          enqueueSnackbar(massage,{ variant : 'error'});
         });
       };
 
@@ -61,17 +54,15 @@ export default function Register() {
         setPasswordConfig([response.data]);
       })
       .catch((error) => {
-        // handle error
-        console.log(error);
+        const massage = error.response ? error.response.data : "Network Error";
+        enqueueSnackbar(massage,{ variant : 'error'});
       })
       }
       
 
     
       return (
-        <ThemeProvider theme={theme}>
-          <PopUp info={popUpInfo} handleClose={()=>{setPopUpInfo(false)}}>
-            </PopUp>
+        <ThemeProvider theme={theme}>          
           <Container component="main" maxWidth="xs">
             
             <CssBaseline />
@@ -146,18 +137,20 @@ export default function Register() {
                   </Grid> */}
                 </Grid>
                 {
-                  passwordConfig.length === 0 ? (
-                    <Box sx={{ display: 'flex' }}>
-                      <CircularProgress />
-                    </Box>
-                  ) : (
-                    Object.keys(passwordConfig[0].settings).map((key) => {
-                      if(passwordConfig[0].settings[key]){
-                        let re = new RegExp(passwordConfig[0].regex[key])
-                        return(<Alert severity={re.test(userPassword)?"success":"error"}>{key}</Alert>);
+                  passwordConfig.length !== 0 && (
+                  <Alert severity={passwordConfig[0]["min password length"] <= userPassword.length?"success":"error"}>password must contain more than {passwordConfig[0]['min password length']} characters</Alert>
+                  )
+                }
+                {
+                  passwordConfig.length !== 0 && (
+                    Object.keys(passwordConfig[0].character.settings).reduce((filtered, key) => {
+                      if (passwordConfig[0].character.settings[key]) {
+                        let re = new RegExp(passwordConfig[0].character.regex[key])
+                         filtered.push(<Alert key={key} severity={re.test(userPassword)?"success":"error"}>{key}</Alert>);
                       }
-                    })
-                    )
+                      return filtered;
+                    }, [])
+                  )
                 }
                 <Button
                   type="submit"
@@ -177,6 +170,7 @@ export default function Register() {
               </Box>
             </Box>
           </Container>
+          
         </ThemeProvider>
       );
     }

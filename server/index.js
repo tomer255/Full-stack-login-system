@@ -17,6 +17,8 @@ const Register = require("./routes/register");
 const AddNote = require("./routes/addNote");
 const Search = require("./routes/search");
 const RemoveNote = require("./routes/removeNote");
+const Changepass = require("./routes/changepass");
+
 
 
 
@@ -57,3 +59,4 @@ app.post("/register", Register);
 app.post("/addNote",AddNote);
 app.post("/Search",Search);
 app.post("/removeNote",RemoveNote)
+app.post("/changePassword",Changepass)

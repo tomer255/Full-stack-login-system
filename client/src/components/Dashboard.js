@@ -35,7 +35,7 @@ export default function Dashboard() {
         history.push("/Login");
       }
       handleSearch();
-    },[])
+    })
 
     const handleAddNote = () => {
         Axios.post("http://localhost:3005/addNote",{

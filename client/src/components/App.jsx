@@ -6,7 +6,8 @@ import ChangePass from './Changepass.js'
 import Login from "./Login.js";
 import Dashboard from "./Dashboard";
 import Forgotpass from "./Forgotpass";
-
+// import MyApp from "./test"
+import { SnackbarProvider} from 'notistack';
 
 
 
@@ -14,6 +15,7 @@ export default function App() {
   return (
     <div>
       <BrowserRouter>
+      <SnackbarProvider maxSnack={3}>
       <Nav />
         <Switch>
           <Route exact path="/register" component={Register} />
@@ -22,7 +24,11 @@ export default function App() {
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/forgotpass" component={Forgotpass} />
 
+          {/* <Route exact path="/test" component={MyApp} /> */}
+
+
         </Switch>
+        </SnackbarProvider>
       </BrowserRouter>
     </div>
   );

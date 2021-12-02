@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,15 +13,14 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Axios from 'axios';
-import PopUp from './PopUp'
-import Alert from '@mui/material/Alert';
 import { useHistory } from "react-router";
+import { useSnackbar } from 'notistack';
   
   const theme = createTheme();
 
 export default function Login() {
-  const [popUpInfo,setPopUpInfo] = useState({});
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
 
       const handleSubmit = (event) => {
         event.preventDefault();
@@ -35,18 +34,13 @@ export default function Login() {
           window.location.reload();
         })
         .catch((error) => {
-          setPopUpInfo({
-            title: "server massage",
-            text:<Alert severity="error">{error.response.data}</Alert>,
-            show: true
-          });
+          const massage = error.response ? error.response.data : "Network Error";
+          enqueueSnackbar(massage,{ variant : 'error'});
         });
       };
     
       return (
         <ThemeProvider theme={theme}>
-          <PopUp info={popUpInfo} handleClose={()=>{setPopUpInfo(false)}}>
-            </PopUp>
           <Container component="main" maxWidth="xs">
             <CssBaseline />
             <Box

@@ -7,20 +7,37 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { useSnackbar } from 'notistack';
   
   const theme = createTheme();
 
 export default function ChangePass() {
+  const { enqueueSnackbar } = useSnackbar();
+  const headers = {
+    "x-access-token": localStorage.getItem('token'),
+}
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        console.log({
-          email: data.get('email'),
-          password: data.get('password'),
-        });
+        if(data.get('newPassword') === data.get('validatePassword')){
+          Axios.post("http://localhost:3005/changePassword",{
+            currentPassword : data.get('currentPassword'),
+            newPassword : data.get('newPassword'),
+          },{headers: headers}
+          ).then((response) => {
+            enqueueSnackbar(response.data,{ variant : 'success'});
+          })
+          .catch((error) => {
+            const massage = error.response ? error.response.data : "Network Error";
+            enqueueSnackbar(massage,{ variant : 'error'});
+          });
+        }else{
+          enqueueSnackbar("passwords dont mach",{ variant : 'error'});
+        }
+
       };
     
       return (
@@ -47,6 +64,7 @@ export default function ChangePass() {
                   required
                   fullWidth
                   id="currentPassword"
+                  type="password"
                   label="Current Password"
                   name="currentPassword"
                   autoFocus
@@ -57,7 +75,7 @@ export default function ChangePass() {
                   fullWidth
                   name="newPassword"
                   label="New Password"
-                  type="newPassword"
+                  type="password"
                   id="newPassword"
                 />
                 <TextField
@@ -66,7 +84,7 @@ export default function ChangePass() {
                   fullWidth
                   name="validatePassword"
                   label="Validate Password"
-                  type="validatePassword"
+                  type="password"
                   id="validatePassword"
                 />
              

@@ -11,11 +11,12 @@ export default function Nav() {
   const [authStatus,setAuthStatus] = useState(false);
   const [flag,setFlag] = useState(false);
   const history = useHistory();
-  const headers = {
-    "x-access-token": localStorage.getItem('token'),
-}
+
 
   useEffect(() => {
+    const headers = {
+      "x-access-token": localStorage.getItem('token'),
+  }
     if(headers["x-access-token"]){
       Axios.get("http://localhost:3005/authentication_status",
       {headers: headers}
@@ -94,7 +95,7 @@ export default function Nav() {
           {navArray.map((item) => {
             return(
               item.authenticationRequired === authStatus && (
-            <Typography m={2} t={3} variant="h6" component="div">
+            <Typography key={item.title} m={2} t={3} variant="h6" component="div">
               <Button onClick={item.function} color="inherit">
                 {item.title}
               </Button>
