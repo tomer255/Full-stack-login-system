@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,14 +10,31 @@ import Container from '@mui/material/Container';
 import Axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
+import Alert from '@mui/material/Alert';
   
   const theme = createTheme();
 
 export default function ChangePass() {
+  const [passwordConfig,setPasswordConfig] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+  const [userNewPassword,setUserNewPassword] = useState("");
   const headers = {
     "x-access-token": localStorage.getItem('token'),
-}
+  }
+  useEffect(() => {
+    getPasswordConfig();
+  })
+
+  const getPasswordConfig = () => {
+    Axios.get('http://localhost:3005/password_config')
+    .then( (response) => {
+      setPasswordConfig([response.data]);
+    })
+    .catch((error) => {
+      const massage = error.response ? error.response.data : "Network Error";
+      enqueueSnackbar(massage,{ variant : 'error'});
+    })
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -77,6 +94,7 @@ export default function ChangePass() {
                   label="New Password"
                   type="password"
                   id="newPassword"
+                  onChange={(event) => {setUserNewPassword(event.target.value)}}
                 />
                 <TextField
                   margin="normal"
@@ -87,7 +105,22 @@ export default function ChangePass() {
                   type="password"
                   id="validatePassword"
                 />
-             
+                             {
+                  passwordConfig.length !== 0 && (
+                  <Alert severity={passwordConfig[0]["min password length"] <= userNewPassword.length?"success":"error"}>password must contain more than {passwordConfig[0]['min password length']} characters</Alert>
+                  )
+                }
+                {
+                  passwordConfig.length !== 0 && (
+                    Object.keys(passwordConfig[0].character.settings).reduce((filtered, key) => {
+                      if (passwordConfig[0].character.settings[key]) {
+                        let re = new RegExp(passwordConfig[0].character.regex[key])
+                         filtered.push(<Alert key={key} severity={re.test(userNewPassword)?"success":"error"}>{key}</Alert>);
+                      }
+                      return filtered;
+                    }, [])
+                  )
+                }
                 <Button
                   type="submit"
                   fullWidth

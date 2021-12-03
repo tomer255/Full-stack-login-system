@@ -11,6 +11,8 @@ router.post("/Search",verifyToken, async (req,res)=>{
         }
         else{
             try{
+                // db.query(`SELECT title , content FROM notes WHERE email = (?) AND title LIKE "%${req.body.search}%"`,
+                // [authData.user.email],(err,result) => { // sql injection
                 db.query("SELECT title , content FROM notes WHERE email = (?) AND title LIKE (?)",
                 [authData.user.email,`%${req.body.search}%`],(err,result) => {
                     if (err){
