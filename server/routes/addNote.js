@@ -13,7 +13,7 @@ router.post("/addNote", verifyToken, async (req, res) => {
                 db.query("INSERT INTO notes (email,title,content) VALUES (?,?,?)",
                     [authData.user.email, req.body.title, req.body.content], (err, result) => {
                         if (err) {
-                            console.log(err)
+                            console.log(err);
                             res.status(500).send("An error occurred");
                         } else {
                             res.status(200).send("Node created successfully");

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,6 +15,13 @@ import {createTheme, ThemeProvider} from '@mui/material/styles';
 import Axios from 'axios';
 import {useHistory} from "react-router";
 import {useSnackbar} from 'notistack';
+import IconButton from '@mui/material/IconButton';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const theme = createTheme();
 
@@ -22,12 +29,32 @@ export default function Login() {
     const history = useHistory();
     const {enqueueSnackbar} = useSnackbar();
 
+    const [UserPasswordvalues, setUserPasswordValues] = useState({
+        password: "",
+        showPassword: false,
+    });
+
+    const handleClickShowPassword = () => {
+        setUserPasswordValues({
+            ...UserPasswordvalues,
+            showPassword: !UserPasswordvalues.showPassword,
+        });
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
+    const handleChange = (prop) => (event) => {
+        setUserPasswordValues({...UserPasswordvalues, [prop]: event.target.value});
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         Axios.post("http://localhost:3005/login", {
             email: data.get('email'),
-            password: data.get('password'),
+            password: UserPasswordvalues.password,
         }).then((response) => {
             localStorage.setItem("token", response.data.token);
             history.push("/dashboard");
@@ -68,16 +95,37 @@ export default function Login() {
                             autoComplete="email"
                             autoFocus
                         />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
+                        <Grid item xs={12}>
+                                <FormControl variant="outlined">
+                                    <InputLabel htmlFor="outlined-adornment-password">
+                                        Password
+                                    </InputLabel>
+                                    <OutlinedInput
+                                        id="password"
+                                        label="Password"
+                                        fullWidth
+                                        type={UserPasswordvalues.showPassword ? "text" : "password"}
+                                        value={UserPasswordvalues.password}
+                                        onChange={handleChange("password")}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                    edge="end"
+                                                >
+                                                    {UserPasswordvalues.showPassword ? (
+                                                        <VisibilityOff/>
+                                                    ) : (
+                                                        <Visibility/>
+                                                    )}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                    />
+                                </FormControl>
+                            </Grid>
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary"/>}
                             label="Remember me"

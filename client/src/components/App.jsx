@@ -6,6 +6,7 @@ import ChangePass from "./Changepass.js";
 import Login from "./Login.js";
 import Dashboard from "./Dashboard";
 import Forgotpass from "./Forgotpass";
+import Resetpass from "./Resetpass";
 import { SnackbarProvider } from "notistack";
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
             <Route exact path="/login" component={Login} />
             <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="/forgotpass" component={Forgotpass} />
+            <Route exact path="/resetpass/:id/:token" component={Resetpass} />
           </Switch>
         </SnackbarProvider>
       </BrowserRouter>

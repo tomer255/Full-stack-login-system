@@ -150,6 +150,8 @@ export default function Register() {
                                     </InputLabel>
                                     <OutlinedInput
                                         id="password"
+                                        label="Password"
+                                        fullWidth
                                         type={UserPasswordvalues.showPassword ? "text" : "password"}
                                         value={UserPasswordvalues.password}
                                         onChange={handleChange("password")}
@@ -169,7 +171,6 @@ export default function Register() {
                                                 </IconButton>
                                             </InputAdornment>
                                         }
-                                        label="Password"
                                     />
                                 </FormControl>
                             </Grid>

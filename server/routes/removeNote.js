@@ -3,7 +3,7 @@ const verifyToken = require("../auth");
 const jwt = require("jsonwebtoken");
 const config = process.env;
 
-router.post("/removeNote", async (req, res) => {
+router.post("/removeNote",verifyToken, async (req, res) => {
     jwt.verify(
         req.headers["x-access-token"],
         config.TOKEN_KEY,

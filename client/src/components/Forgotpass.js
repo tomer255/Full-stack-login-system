@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -8,22 +8,27 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
+import Axios from "axios";
+import {useSnackbar} from "notistack";
 
 const theme = createTheme();
 
 export default function Forgotpass() {
-    const [state, setstate] = useState(false);
-    const handleState = () => {
-        setstate(true);
-    };
+    const {enqueueSnackbar} = useSnackbar();
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        Axios.post("http://localhost:3005/forgotpass", {
             email: data.get("email"),
-            password: data.get("password"),
-        });
+        })
+            .then((response) => {
+                enqueueSnackbar(response.data, {variant: "success"});
+            })
+            .catch((error) => {
+                const massage = error.response ? error.response.data : "Network Error";
+                enqueueSnackbar(massage, {variant: "error"});
+            });
     };
 
     return (
@@ -66,33 +71,9 @@ export default function Forgotpass() {
                             fullWidth
                             variant="contained"
                             sx={{mt: 3, mb: 2}}
-                            onClick={handleState}
                         >
                             Forgot Password
                         </Button>
-                        {state ? (
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="validtionCode"
-                                label="Validtion Code"
-                                name="validtionCode"
-                                autoComplete="validtionCode"
-                                autoFocus
-                            />
-
-                        ) : null}
-                        {state ? (<Button
-                            style={{backgroundColor: "green"}}
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{mt: 3, mb: 2}}
-                            onClick={handleState}
-                        >
-                            Submit
-                        </Button>) : null}
                     </Box>
                 </Box>
             </Container>

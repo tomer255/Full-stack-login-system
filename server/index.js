@@ -2,15 +2,14 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
 const dotenv = require('dotenv')
 const verifyToken = require("./auth");
-const jwt = require("jsonwebtoken");
+dotenv.config();
 const config = process.env;
 
-dotenv.config();
 
-const Port = process.env.PORT
+
+const Port = config.PORT
 
 const Login = require("./routes/login");
 const Register = require("./routes/register");
@@ -18,6 +17,9 @@ const AddNote = require("./routes/addNote");
 const Search = require("./routes/search");
 const RemoveNote = require("./routes/removeNote");
 const Changepass = require("./routes/changepass");
+const Forgotpass = require("./routes/forgotpass");
+const Resetpass = require("./routes/resetpass");
+
 
 
 app.use(cors())
@@ -32,7 +34,7 @@ app.use(express.json());
 db = mysql.createConnection({
     user: "root",
     host: "localhost",
-    password: process.env.DB_PASSWORD,
+    password: config.DB_PASSWORD,
     database: "security-project"
 })
 
@@ -46,7 +48,6 @@ app.get("/", (req, res) => {
 
 app.get("/passwordRequirements", (req, res) => {
     res.send(require('./config')["password requirements"]);
-    // console.log("!");
 })
 
 app.get("/authentication_status", verifyToken, (req, res) => {
@@ -56,6 +57,8 @@ app.get("/authentication_status", verifyToken, (req, res) => {
 app.post("/login", Login);
 app.post("/register", Register);
 app.post("/addNote", AddNote);
-app.post("/Search", Search);
+app.post("/search", Search);
 app.post("/removeNote", RemoveNote)
 app.post("/changePassword", Changepass)
+app.post("/forgotpass",Forgotpass)
+app.post("/resetpass",Resetpass)

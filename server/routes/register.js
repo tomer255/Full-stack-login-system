@@ -6,11 +6,11 @@ router.post("/register", async (req, res) => {
     try {
         const {email, password, firstName, lastName} = req.body;
 
-        if (changePasswordValidation(password)) {
+        if (!changePasswordValidation(password)) {
             res.status(400).send("Password must meet minimum requirements");
             return;
         }
-        db.query("SELECT * FROM users where email=(?)", [email], async (error, results, fields) => {
+        db.query("SELECT email FROM users where email=(?)", [email], async (error, results, fields) => {
             if (error) {
                 console.log(error);
                 res.status(500).send("An error occurred");

@@ -5,7 +5,7 @@
             "settings" : {
                 "must contain numbers" : true,
                 "must contain lowercase" : true,
-                "must contain uppercase" : true,
+                "must contain uppercase" : false,
                 "must contain special character" : false
             },
     

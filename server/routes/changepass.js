@@ -13,7 +13,7 @@ router.post("/changePassword", verifyToken, async (req, res) => {
             console.log(error);
             res.status(500).send("An authentication error occurred");
         } else {
-            if (changePasswordValidation(newPassword)) {
+            if (!changePasswordValidation(newPassword)) {
                 res.status(400).send("Password must meet minimum requirements");
                 return;
             }

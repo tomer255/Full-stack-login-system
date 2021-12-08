@@ -22,7 +22,7 @@ router.post("/login", async (req, res) => {
                             }
                             if (bcryptResults) {
                                 db.query("UPDATE users SET failedLoginAttempts = 0 WHERE email = (?)", [req.body.email])
-                                const token = jwt.sign({user: results[0]}, process.env.TOKEN_KEY, (jwtError, token) => {
+                                jwt.sign({user: results[0]}, process.env.TOKEN_KEY, (jwtError, token) => {
                                     if (jwtError) {
                                         res.status(500).send("An error occurred");
                                     } else {

@@ -226,7 +226,6 @@ export default function Dashboard() {
                           <Typography gutterBottom variant="h5" component="div">
                             {item.title}
                           </Typography>
-                          {/* <span dangerouslySetInnerHTML={{ __html: item.content }></span> */}
                           {/* <div contentEditable='true' dangerouslySetInnerHTML={{ __html: item.content }}></div> XSS */}
                           <Typography variant="body2" color="text.secondary">
                             {item.content}
