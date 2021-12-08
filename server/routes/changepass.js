@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const config = process.env;
 const bcrypt = require('bcrypt');
 const changePasswordValidation = require('../validate_password.js');
-const passwordConfig = require('../password_config');
+const passwordConfig = require('../config');
 
 router.post("/changePassword", verifyToken, async (req, res) => {
     const {currentPassword, newPassword} = req.body;
@@ -19,7 +19,7 @@ router.post("/changePassword", verifyToken, async (req, res) => {
             }
             bcrypt.compare(currentPassword, authData.user.password, async (bcryptError, bcryptResults) => {
                 if (bcryptError) {
-                    console.log(bcryptError)
+                    console.log(bcryptError);
                     res.status(500).send("An error occurred");
                 }
                 if (bcryptResults) {
@@ -27,25 +27,26 @@ router.post("/changePassword", verifyToken, async (req, res) => {
                         db.query("SELECT password,oldPasswords FROM users WHERE email = (?)",
                             [authData.user.email], async (oldPassError, oldPassResult) => {
                                 if (oldPassError) {
-                                    console.log(oldPassError)
+                                    console.log(oldPassError);
                                     res.status(500).send("An error occurred");
                                 } else {
-                                    
-                                    const oldPasswordsArr = oldPassResult[0].oldPasswords === null ? [oldPassResult[0].password] : [oldPassResult[0].password,...oldPassResult[0].oldPasswords.split(',')].slice(0,passwordConfig.history)
-                                    isNotPrevPass = await checkIfPassExists(newPassword,oldPasswordsArr)
-                                    if(isNotPrevPass){                                
-                                    const newHashedPassword = await bcrypt.hash(newPassword, 10)
-                                    db.query("UPDATE users SET password = (?) , oldPasswords = (?) WHERE email = (?)",
-                                        [newHashedPassword, oldPasswordsArr.join(','), authData.user.email], (err, result) => {
-                                            if (err) {
-                                                console.log(err)
-                                                res.status(500).send("An error occurred");
-                                            } else {
-                                                res.status(200).send("password changed");
-                                            }
-                                        });
-                                    }else{
-                                        res.status(400).send("You have already used this password")
+
+                                    const oldPasswordsArr = oldPassResult[0].oldPasswords === null ? [oldPassResult[0].password] :
+                                        [oldPassResult[0].password, ...oldPassResult[0].oldPasswords.split(',')].slice(0, passwordConfig.history);
+                                    isNotPrevPass = await checkIfPassExists(newPassword, oldPasswordsArr);
+                                    if (isNotPrevPass) {
+                                        const newHashedPassword = await bcrypt.hash(newPassword, 10)
+                                        db.query("UPDATE users SET password = (?) , oldPasswords = (?) WHERE email = (?)",
+                                            [newHashedPassword, oldPasswordsArr.join(','), authData.user.email], (err, result) => {
+                                                if (err) {
+                                                    console.log(err)
+                                                    res.status(500).send("An error occurred");
+                                                } else {
+                                                    res.status(200).send("password changed");
+                                                }
+                                            });
+                                    } else {
+                                        res.status(400).send("You have already used this password");
                                     }
                                 }
                             });

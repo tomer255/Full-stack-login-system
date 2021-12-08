@@ -20,43 +20,42 @@ const RemoveNote = require("./routes/removeNote");
 const Changepass = require("./routes/changepass");
 
 
-
-
 app.use(cors())
 
 // Parse URL-encoded bodies (as sent by HTML forms)
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
 
 
 db = mysql.createConnection({
-    user:"root",
-    host:"localhost",
-    password:process.env.DB_PASSWORD,
+    user: "root",
+    host: "localhost",
+    password: process.env.DB_PASSWORD,
     database: "security-project"
 })
 
-app.listen(Port, function() {
+app.listen(Port, function () {
     console.log(`Server is running on port ${Port}`);
 });
 
-app.get("/", (req,res) => {
+app.get("/", (req, res) => {
     res.send("Server is up and running");
 });
 
-app.get("/password_config",(req,res) => {
-    res.send(require('./password_config'));
+app.get("/passwordRequirements", (req, res) => {
+    res.send(require('./config')["password requirements"]);
+    // console.log("!");
 })
 
-app.get("/authentication_status",verifyToken,(req,res) => {
+app.get("/authentication_status", verifyToken, (req, res) => {
     res.status(200).send();
 })
 
 app.post("/login", Login);
 app.post("/register", Register);
-app.post("/addNote",AddNote);
-app.post("/Search",Search);
-app.post("/removeNote",RemoveNote)
-app.post("/changePassword",Changepass)
+app.post("/addNote", AddNote);
+app.post("/Search", Search);
+app.post("/removeNote", RemoveNote)
+app.post("/changePassword", Changepass)

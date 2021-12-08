@@ -1,0 +1,24 @@
+{
+    "password requirements":{
+        "min password length" : 4,
+        "character" : {
+            "settings" : {
+                "must contain numbers" : true,
+                "must contain lowercase" : true,
+                "must contain uppercase" : true,
+                "must contain special character" : false
+            },
+    
+            "regex" : {
+                "must contain numbers" : "[0-9]",
+                "must contain lowercase" : "[a-z]",
+                "must contain uppercase" : "[A-Z]",
+                "must contain special character" : "[$@$!%*#?&]"
+            }
+        }
+    
+    },
+    "history" : 3,
+    "maximum attempts" : 3
+}
+

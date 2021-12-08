@@ -8,6 +8,8 @@ client/.pnp
 client/history
 /.history
 
+server/mails/
+
 
 # testing
 client/coverage
