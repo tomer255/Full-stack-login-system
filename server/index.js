@@ -33,7 +33,7 @@ db = mysql.createConnection({
     user: config.DB_USER,
     host: config.DB_HOST,
     password: config.DB_PASSWORD,
-    database: DB_NSME,
+    database: config.DB_NAME,
 })
 
 const TLSoptions = {
@@ -41,7 +41,7 @@ const TLSoptions = {
     cert: fs.readFileSync('./cert/cert.pem')
 };
 
-TLSserver = https.createServer(TLSoptions,app)
+TLSserver = https.createServer(TLSoptions, app)
 
 TLSserver.listen(Port, function () {
     console.log(`TLS Server is running on port ${Port}`);

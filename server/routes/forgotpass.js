@@ -21,7 +21,7 @@ router.post("/forgotpass", async (req, res) => {
                 email: email
             }
             const token = jwt.sign(paylode, userKey, { expiresIn: '15m' })
-            const link = `http://localhost:3000/resetpass/${id}/${token}`
+            const link = config.FRONT + `/resetpass/${id}/${token}`
             // console.log("link: ",link)
             sendResetPass(email, firstName, lastName, link)
             return res.status(200).send("Password link has been send to you're email");
