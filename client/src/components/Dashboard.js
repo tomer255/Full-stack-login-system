@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-import PopUp from "./PopUp";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -20,10 +19,11 @@ import Tooltip from "@mui/material/Tooltip";
 
 const theme = createTheme();
 
+const server = 'https://localhost:3005';
+
 export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [noteList, setNoteList] = useState([]);
-  const [popUpInfo, setPopUpInfo] = useState({});
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const headers = {
@@ -32,7 +32,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (headers["x-access-token"]) {
-      Axios.get("http://localhost:3005/authentication_status", {
+      Axios.get(server + '/authentication_status', {
         headers: headers,
       })
         .then((response) => {
@@ -50,7 +50,7 @@ export default function Dashboard() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     Axios.post(
-      "http://localhost:3005/addNote",
+      server + "/addNote",
       {
         title: data.get("title"),
         content: data.get("content"),
@@ -76,7 +76,7 @@ export default function Dashboard() {
 
   const searchNots = (text) => {
     Axios.post(
-      "http://localhost:3005/Search",
+      server + "/Search",
       {
         search: text,
       },
@@ -93,7 +93,7 @@ export default function Dashboard() {
 
   const handleRemoveNote = (item) => {
     Axios.post(
-      "http://localhost:3005/removeNote",
+      server + "/removeNote",
       {
         title: item.title,
       },
@@ -122,12 +122,6 @@ export default function Dashboard() {
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
-        <PopUp
-          info={popUpInfo}
-          handleClose={() => {
-            setPopUpInfo(false);
-          }}
-        ></PopUp>
         <CssBaseline />
         <Box
           sx={{

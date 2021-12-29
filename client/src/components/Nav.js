@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import {useHistory} from "react-router";
 import Axios from 'axios';
 
+const server = 'https://localhost:3005';
+
 export default function Nav() {
     const [authStatus, setAuthStatus] = useState(false);
     const [flag, setFlag] = useState(false);
@@ -18,7 +20,7 @@ export default function Nav() {
             "x-access-token": localStorage.getItem('token'),
         }
         if (headers["x-access-token"]) {
-            Axios.get("http://localhost:3005/authentication_status",
+            Axios.get(server + '/authentication_status',
                 {headers: headers}
             ).then((response) => {
                 setAuthStatus(true);

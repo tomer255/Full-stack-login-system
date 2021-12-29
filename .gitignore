@@ -10,6 +10,8 @@ client/history
 
 server/mails/
 
+server/cert/
+
 
 # testing
 client/coverage

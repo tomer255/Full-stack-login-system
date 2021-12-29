@@ -24,6 +24,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const theme = createTheme();
 
+const server = 'https://localhost:3005';
+
 export default function Register() {
     const [passwordConfig, setPasswordConfig] = useState([]);
     const history = useHistory();
@@ -34,7 +36,7 @@ export default function Register() {
     });
 
     const getPasswordConfig = () => {
-        Axios.get("http://localhost:3005/passwordRequirements")
+        Axios.get(server + '/passwordRequirements')
             .then((response) => {
                 setPasswordConfig([response.data]);
                 enqueueSnackbar("password requirements set", {variant: 'success'});
@@ -44,6 +46,7 @@ export default function Register() {
                 enqueueSnackbar(massage, {variant: "error"});
             });
     };
+
 
     useEffect(() => {
         getPasswordConfig();
@@ -67,7 +70,7 @@ export default function Register() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        Axios.post("http://localhost:3005/register", {
+        Axios.post(server + "/register", {
             email: data.get("email"),
             password: UserPasswordvalues.password,
             firstName: data.get("firstName"),

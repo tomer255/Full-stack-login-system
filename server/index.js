@@ -4,10 +4,10 @@ const mysql = require('mysql');
 const cors = require('cors');
 const dotenv = require('dotenv')
 const verifyToken = require("./auth");
+const https = require('https');
+const fs = require('fs');
 dotenv.config();
 const config = process.env;
-
-
 
 const Port = config.PORT
 
@@ -20,27 +20,36 @@ const Changepass = require("./routes/changepass");
 const Forgotpass = require("./routes/forgotpass");
 const Resetpass = require("./routes/resetpass");
 
-
-
 app.use(cors())
 
 // Parse URL-encoded bodies (as sent by HTML forms)
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
 
 
 db = mysql.createConnection({
-    user: "root",
-    host: "localhost",
+    user: config.DB_USER,
+    host: config.DB_HOST,
     password: config.DB_PASSWORD,
-    database: "security-project"
+    database: DB_NSME,
 })
 
-app.listen(Port, function () {
-    console.log(`Server is running on port ${Port}`);
+const TLSoptions = {
+    key: fs.readFileSync('./cert/key.pem'),
+    cert: fs.readFileSync('./cert/cert.pem')
+};
+
+TLSserver = https.createServer(TLSoptions,app)
+
+TLSserver.listen(Port, function () {
+    console.log(`TLS Server is running on port ${Port}`);
 });
+
+// app.listen(Port, function () {
+//     console.log(`Server is running on port ${Port}`);
+// });
 
 app.get("/", (req, res) => {
     res.send("Server is up and running");
@@ -54,11 +63,12 @@ app.get("/authentication_status", verifyToken, (req, res) => {
     res.status(200).send();
 })
 
+
 app.post("/login", Login);
 app.post("/register", Register);
 app.post("/addNote", AddNote);
 app.post("/search", Search);
-app.post("/removeNote", RemoveNote)
-app.post("/changePassword", Changepass)
-app.post("/forgotpass",Forgotpass)
-app.post("/resetpass",Resetpass)
+app.post("/removeNote", RemoveNote);
+app.post("/changePassword", Changepass);
+app.post("/forgotpass", Forgotpass);
+app.post("/resetpass", Resetpass);

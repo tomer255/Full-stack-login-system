@@ -16,6 +16,8 @@ import {useHistory} from "react-router";
 
 const theme = createTheme();
 
+const server = 'https://localhost:3005';
+
 export default function Resetpass(props) {
 
     const [passwordConfig, setPasswordConfig] = useState([]);
@@ -29,7 +31,7 @@ export default function Resetpass(props) {
     }, [])
 
     const getPasswordConfig = () => {
-        Axios.get('http://localhost:3005/passwordRequirements')
+        Axios.get(server + '/passwordRequirements')
             .then((response) => {
                 setPasswordConfig([response.data]);
             })
@@ -43,7 +45,7 @@ export default function Resetpass(props) {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         if (data.get('newPassword') === data.get('validatePassword')) {
-            Axios.post("http://localhost:3005/resetpass", {
+            Axios.post(server + '/resetpass', {
                 id: id,
                 token: token,
                 newPassword: data.get('newPassword'),

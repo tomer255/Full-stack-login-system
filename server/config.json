@@ -8,7 +8,6 @@
                 "must contain uppercase" : false,
                 "must contain special character" : false
             },
-    
             "regex" : {
                 "must contain numbers" : "[0-9]",
                 "must contain lowercase" : "[a-z]",
@@ -16,7 +15,6 @@
                 "must contain special character" : "[$@$!%*#?&]"
             }
         }
-    
     },
     "history" : 3,
     "maximum attempts" : 3
