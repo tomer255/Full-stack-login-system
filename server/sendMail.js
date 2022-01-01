@@ -19,7 +19,7 @@ const sendResetPass = (email, firstName, lastName, link) => {
 
     nodeoutlook.sendEmail({
         auth: {
-            user: process.env.EMAIL,
+            user: process.env.EMAIL_ADDRESS,
             pass: process.env.EMAIL_PASSWORD
         },
         from: process.env.EMAIL,
