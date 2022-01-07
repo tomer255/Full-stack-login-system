@@ -6,7 +6,7 @@ router.post("/register", changePasswordValidation, async (req, res) => {
     try {
         const { email, password, firstName, lastName } = req.body;
         db.query("SELECT email FROM users where email=(?)", [email], async (error, results, fields) => {
-            if (error) {
+            if (error) { 
                 return res.status(500).send("An error occurred");
             }
             if (results.length !== 0) {

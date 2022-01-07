@@ -1,6 +1,6 @@
 {
     "password requirements":{
-        "min password length" : 4,
+        "min password length" : 6,
         "character" : {
             "settings" : {
                 "must contain numbers" : true,

@@ -10,9 +10,9 @@ require.extensions['.html'] = function (module, filename) {
     module.exports = fs.readFileSync(filename, 'utf8');
 };
 
-var html = require('./mails/recover password/recoverPassword.html');
+var html = require('./emails/recover password/recoverPassword.html');
 
-const sendResetPass = (email, firstName, lastName, link) => {
+const sendResetPass = (email, firstName, lastName, link,res) => {
     html = html.replace("@FirstName", firstName);
     html = html.replace("@LastName", lastName);  
     html = html.replace("@Link", link);
@@ -30,32 +30,32 @@ const sendResetPass = (email, firstName, lastName, link) => {
         attachments: [
             {
                 filename: 'GIF_password.gif',
-                path: './mails/recover password/images/GIF_password.gif',
+                path: './emails/recover password/images/GIF_password.gif',
                 cid: 'GIF_password@kreata.ee'
             },
             {
                 filename: 'Logo.png',
-                path: './mails/recover password/images/Logo.png',
+                path: './emails/recover password/images/Logo.png',
                 cid: 'Logo@kreata.ee'
             },
             {
                 filename: 'twitter2x.png',
-                path: './mails/recover password/images/twitter2x.png',
+                path: './emails/recover password/images/twitter2x.png',
                 cid: 'twitter2x@kreata.ee'
             },
             {
                 filename: 'linkedin2x.png',
-                path: './mails/recover password/images/linkedin2x.png',
+                path: './emails/recover password/images/linkedin2x.png',
                 cid: 'linkedin2x@kreata.ee'
             },
             {
                 filename: 'instagram2x.png',
-                path: './mails/recover password/images/instagram2x.png',
+                path: './emails/recover password/images/instagram2x.png',
                 cid: 'instagram2x@kreata.ee'
             },
             {
                 filename: 'facebook2x.png',
-                path: './mails/recover password/images/facebook2x.png',
+                path: './emails/recover password/images/facebook2x.png',
                 cid: 'facebook2x@kreata.ee'
             }
         ],
