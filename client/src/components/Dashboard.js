@@ -10,14 +10,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { useSnackbar } from "notistack";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-
-const theme = createTheme();
 
 const server = 'https://localhost:3005';
 
@@ -62,8 +59,8 @@ export default function Dashboard() {
         enqueueSnackbar(response.data, { variant: "success" });
       })
       .catch((error) => {
-        const massage = error.response ? error.response.data : "Network Error";
-        enqueueSnackbar(massage, { variant: "error" });
+        const message = error.response ? error.response.data : "Network Error";
+        enqueueSnackbar(message, { variant: "error" });
       });
   };
 
@@ -86,8 +83,8 @@ export default function Dashboard() {
         setNoteList(response.data);
       })
       .catch((error) => {
-        const massage = error.response ? error.response.data : "Network Error";
-        enqueueSnackbar(massage, { variant: "error" });
+        const message = error.response ? error.response.data : "Network Error";
+        enqueueSnackbar(message, { variant: "error" });
       });
   };
 
@@ -103,14 +100,9 @@ export default function Dashboard() {
         searchNots(search);
       })
       .catch((error) => {
-        const massage = error.response ? error.response.data : "Network Error";
-        enqueueSnackbar(massage, { variant: "error" });
+        const message = error.response ? error.response.data : "Network Error";
+        enqueueSnackbar(message, { variant: "error" });
       });
-  };
-
-  const transitionDuration = {
-    enter: theme.transitions.duration.enteringScreen,
-    exit: theme.transitions.duration.leavingScreen,
   };
 
   const fabStyle = {
@@ -120,7 +112,6 @@ export default function Dashboard() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -247,6 +238,5 @@ export default function Dashboard() {
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
   );
 }

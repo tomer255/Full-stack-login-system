@@ -11,7 +11,7 @@ You can generate certificate using the following OpenSSL commands:
 - `mkdir cert && cd cert`
 - `openssl genrsa -out key.pem 2048`
 - `openssl req -new -sha256 -key key.pem -out csr.pem`
-- `openssl x509 -req -in csr.pem -signkey key.pem -out ryans-cert.pem`
+- `openssl x509 -req -in csr.pem -signkey key.pem -out cert.pem`
 
 For further explanation you can visit https://nodejs.org/api/tls.html
 

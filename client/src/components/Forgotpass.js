@@ -7,17 +7,14 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
 import Axios from "axios";
 import {useSnackbar} from "notistack";
 
-const theme = createTheme();
 
 const server = 'https://localhost:3005';
 
 export default function Forgotpass() {
     const {enqueueSnackbar} = useSnackbar();
-
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -28,13 +25,12 @@ export default function Forgotpass() {
                 enqueueSnackbar(response.data, {variant: "success"});
             })
             .catch((error) => {
-                const massage = error.response ? error.response.data : "Network Error";
-                enqueueSnackbar(massage, {variant: "error"});
+                const message = error.response ? error.response.data : "Network Error";
+                enqueueSnackbar(message, {variant: "error"});
             });
     };
 
     return (
-        <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline/>
                 <Box
@@ -79,6 +75,5 @@ export default function Forgotpass() {
                     </Box>
                 </Box>
             </Container>
-        </ThemeProvider>
     );
 }

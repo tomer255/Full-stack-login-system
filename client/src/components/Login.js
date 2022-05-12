@@ -11,7 +11,6 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Axios from 'axios';
 import { useHistory } from "react-router";
 import { useSnackbar } from 'notistack';
@@ -22,8 +21,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-const theme = createTheme();
 
 const server = 'https://localhost:3005';
 
@@ -63,13 +60,12 @@ export default function Login() {
             window.location.reload();
         })
             .catch((error) => {
-                const massage = error.response ? error.response.data : "Network Error";
-                enqueueSnackbar(massage, { variant: 'error' });
+                const message = error.response?.data ?? "Network Error";
+                enqueueSnackbar(message, { variant: 'error' });
             });
     };
 
     return (
-        <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -155,6 +151,5 @@ export default function Login() {
                     </Box>
                 </Box>
             </Container>
-        </ThemeProvider>
     );
 }

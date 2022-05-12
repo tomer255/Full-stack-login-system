@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
 import Axios from "axios";
 import Alert from "@mui/material/Alert";
 import {useSnackbar} from "notistack";
@@ -22,7 +21,6 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-const theme = createTheme();
 
 const server = 'https://localhost:3005';
 
@@ -42,8 +40,8 @@ export default function Register() {
                 enqueueSnackbar("password requirements set", {variant: 'success'});
             })
             .catch((error) => {
-                const massage = error.response ? error.response.data : "Network Error";
-                enqueueSnackbar(massage, {variant: "error"});
+                const message = error.response ? error.response.data : "Network Error";
+                enqueueSnackbar(message, {variant: "error"});
             });
     };
 
@@ -81,17 +79,15 @@ export default function Register() {
                 history.push("/Login");
             })
             .catch((error) => {
-                const massage = error.response ? error.response.data : "Network Error";
-                enqueueSnackbar(massage, {variant: "error"});
+                const message = error.response ? error.response.data : "Network Error";
+                enqueueSnackbar(message, {variant: "error"});
             });
     };
 
 
     return (
-        <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline/>
-
                 <Box
                     sx={{
                         marginTop: 8,
@@ -177,17 +173,6 @@ export default function Register() {
                                     />
                                 </FormControl>
                             </Grid>
-
-                            {/* <Grid item xs={12}>
-                    <TextField
-                    required
-                    fullWidth
-                    name="validatePassword"
-                    label="Validate Password"
-                    type="password"
-                    id="validatePassword"
-                  />
-                  </Grid> */}
                         </Grid>
                         {passwordConfig.length !== 0 && (
                             <Alert
@@ -240,6 +225,5 @@ export default function Register() {
                     </Box>
                 </Box>
             </Container>
-        </ThemeProvider>
     );
 }

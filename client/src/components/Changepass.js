@@ -8,11 +8,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Axios from 'axios';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import Alert from '@mui/material/Alert';
 
-const theme = createTheme();
 
 const server = 'https://localhost:3005';
 
@@ -33,8 +31,8 @@ export default function ChangePass() {
                 setPasswordConfig([response.data]);
             })
             .catch((error) => {
-                const massage = error.response ? error.response.data : "Network Error";
-                enqueueSnackbar(massage, { variant: 'error' });
+                const message = error.response ? error.response.data : "Network Error";
+                enqueueSnackbar(message, { variant: 'error' });
             })
     }
 
@@ -50,8 +48,8 @@ export default function ChangePass() {
                 enqueueSnackbar(response.data, { variant: 'success' });
             })
                 .catch((error) => {
-                    const massage = error.response ? error.response.data : "Network Error";
-                    enqueueSnackbar(massage, { variant: 'error' });
+                    const message = error.response ? error.response.data : "Network Error";
+                    enqueueSnackbar(message, { variant: 'error' });
                 });
         } else {
             enqueueSnackbar("passwords dont mach", { variant: 'error' });
@@ -60,7 +58,6 @@ export default function ChangePass() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -140,6 +137,5 @@ export default function ChangePass() {
                     </Box>
                 </Box>
             </Container>
-        </ThemeProvider>
     );
 }

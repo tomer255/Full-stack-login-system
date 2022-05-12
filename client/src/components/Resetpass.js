@@ -8,18 +8,15 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Axios from 'axios';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import Alert from '@mui/material/Alert';
 import { useParams } from 'react-router-dom';
 import {useHistory} from "react-router";
 
-const theme = createTheme();
 
 const server = 'https://localhost:3005';
 
 export default function Resetpass(props) {
-
     const [passwordConfig, setPasswordConfig] = useState([]);
     const { enqueueSnackbar } = useSnackbar();
     const [userNewPassword, setUserNewPassword] = useState("");
@@ -36,8 +33,8 @@ export default function Resetpass(props) {
                 setPasswordConfig([response.data]);
             })
             .catch((error) => {
-                const massage = error.response ? error.response.data : "Network Error";
-                enqueueSnackbar(massage, { variant: 'error' });
+                const message = error.response ? error.response.data : "Network Error";
+                enqueueSnackbar(message, { variant: 'error' });
             })
     }
 
@@ -55,8 +52,8 @@ export default function Resetpass(props) {
                 history.push("/Login");
             })
                 .catch((error) => {
-                    const massage = error.response ? error.response.data : "Network Error";
-                    enqueueSnackbar(massage, { variant: 'error' });
+                    const message = error.response ? error.response.data : "Network Error";
+                    enqueueSnackbar(message, { variant: 'error' });
                 });
         } else {
             enqueueSnackbar("passwords dont mach", { variant: 'error' });
@@ -65,7 +62,6 @@ export default function Resetpass(props) {
     };
 
     return (
-        <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -135,6 +131,5 @@ export default function Resetpass(props) {
                     </Box>
                 </Box>
             </Container>
-        </ThemeProvider>
     );
 }

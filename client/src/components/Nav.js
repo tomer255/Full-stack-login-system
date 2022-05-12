@@ -6,14 +6,18 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import {useHistory} from "react-router";
 import Axios from 'axios';
+import IconButton from '@mui/material/IconButton';
+import { useTheme } from '@mui/material/styles';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const server = 'https://localhost:3005';
 
-export default function Nav() {
+export default function Nav({toggleColorMode}) {
     const [authStatus, setAuthStatus] = useState(false);
     const [flag, setFlag] = useState(false);
     const history = useHistory();
-
+    const theme = useTheme();
 
     useEffect(() => {
         const headers = {
@@ -88,7 +92,6 @@ export default function Nav() {
         },
     ];
 
-
     return (
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
@@ -103,6 +106,12 @@ export default function Nav() {
                                 </Typography>
                             ))
                     })}
+                    <Box style={{margin:"auto"}}>
+                        {theme.palette.mode} mode
+                        <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
+                            {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+                        </IconButton>
+                    </Box>
                 </Toolbar>
             </AppBar>
         </Box>
